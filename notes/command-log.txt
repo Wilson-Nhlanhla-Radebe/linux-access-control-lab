@@ -1,0 +1,191 @@
+Linux Access Control Lab - Command Execution Log
+Author: Wilson Nhlanhla Radebe
+
+==================================================
+1. USER CREATION
+==================================================
+
+Created the first user account:
+sudo adduser john
+
+Created the second user account:
+sudo adduser jane
+
+
+==================================================
+2. DIRECTORY STRUCTURE CREATION
+==================================================
+
+Verified current working directory:
+pwd
+
+Created the main project directory:
+mkdir srv
+
+Moved into the project directory:
+cd srv
+
+Created departmental directories:
+mkdir security_directory
+mkdir finance_directory
+
+
+==================================================
+3. FILE CREATION
+==================================================
+
+Moved into security directory:
+cd security_directory
+
+Created a log file:
+touch logs.txt
+
+Added sample content:
+echo "THIS FILE CAN ONLY BE READ BY AN AUTHORIZED SECURITY USER" >> logs.txt
+
+Returned to parent directory:
+cd ..
+
+Moved into finance directory:
+cd finance_directory
+
+Created finance file:
+touch expenditure.txt
+
+Added sample content:
+echo "COST AND EXPENDITURE MANAGEMENT FOR 2026" >> expenditure.txt
+
+Returned to parent directory:
+cd ..
+
+
+==================================================
+4. GROUP CREATION
+==================================================
+
+Created security group:
+sudo addgroup security_group
+
+Created finance group:
+sudo addgroup finance_group
+
+
+==================================================
+5. USER-GROUP ASSIGNMENT
+==================================================
+
+Added john to security group:
+sudo usermod -aG security_group john
+
+Added jane to finance group:
+sudo usermod -aG finance_group jane
+
+
+==================================================
+6. ACL CONFIGURATION
+==================================================
+
+Granted john execute permission on the parent directory:
+sudo setfacl -m u:john:x /home/willyonazure
+
+Granted jane execute permission on the parent directory:
+sudo setfacl -m u:jane:x /home/willyonazure
+
+
+==================================================
+7. OWNERSHIP CONFIGURATION
+==================================================
+
+Changed ownership of security directory:
+sudo chown root:security_group security_directory
+
+Changed ownership of finance directory:
+sudo chown root:finance_group finance_directory
+
+
+==================================================
+8. PERMISSION CONFIGURATION
+==================================================
+
+Applied permissions to security directory:
+sudo chmod 070 security_directory
+
+Applied setgid to security directory:
+sudo chmod g+s security_directory
+
+Applied permissions to finance directory:
+sudo chmod 070 finance_directory
+
+Applied setgid to finance directory:
+sudo chmod g+s finance_directory
+
+
+==================================================
+9. VERIFICATION OF ACCESS CONTROL
+==================================================
+
+Verified ACLs for security directory:
+sudo getfacl security_directory
+
+Verified ACLs for finance directory:
+sudo getfacl finance_directory
+
+
+==================================================
+10. ACCESS TESTING
+==================================================
+
+Switched to john account:
+su -l john
+
+Navigated to project directory:
+cd /home/willyonazure/srv
+
+Listed available directories:
+ls
+
+Attempted access to finance directory (denied):
+cd finance_directory
+
+Accessed security directory (allowed):
+cd security_directory
+
+Listed contents:
+ls
+
+Read logs file:
+cat logs.txt
+
+
+Switched to jane account:
+su -l jane
+
+Navigated to project directory:
+cd /home/willyonazure/srv
+
+Listed available directories:
+ls
+
+Attempted access to security directory (denied):
+cd security_directory
+
+Accessed finance directory (allowed):
+cd finance_directory
+
+Listed contents:
+ls
+
+Read expenditure file:
+cat expenditure.txt
+
+
+==================================================
+FINAL RESULT
+==================================================
+
+- john successfully accessed security_directory
+- john was denied access to finance_directory
+- jane successfully accessed finance_directory
+- jane was denied access to security_directory
+
+Access control model verified successfully.
