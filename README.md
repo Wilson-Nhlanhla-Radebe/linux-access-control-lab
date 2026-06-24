@@ -109,6 +109,17 @@ The repository includes screenshots showing the major stages of the lab, includi
 - Command-line system administration
 - Permission verification and troubleshooting
 
+
+## Real-World Application
+
+This lab mirrors a common enterprise scenario where multiple departments share the same server infrastructure but require strict data separation. In a real organization, HR, Finance, and Security teams often store sensitive files on shared systems, and improperly configured permissions are one of the most common causes of internal data breaches. This setup demonstrates how proper user/group segregation, ownership control, and ACLs can enforce least-privilege access, ensuring users only see what they're authorized to see, regardless of how the directory structure grows.
+
+## Lessons Learned
+
+- Group inheritance isn't automatic — Initially, new files created inside `security_directory` weren't inheriting the correct group ownership. This led me to research and apply the `setgid` bit on the directory, which solved the issue by ensuring all new files automatically inherit the parent directory's group.
+- Standard permissions have limits - Traditional `chmod`/`chown` worked well for the two main departmental groups, but fell short when a user needed to traverse a parent directory without being granted full access to sibling folders. This is where ACLs (`setfacl`) became necessary, they allowed precise, additive permissions without loosening the overall security model.
+- Verification is not optional — Running `getfacl` after every major change became a habit rather than a final step. Assuming a configuration worked without checking it directly led to a couple of false positives early on, reinforcing that in real environments, you verify access control changes the same way you'd verify a firewall rule, trust nothing until it's tested.
+
 ## Repository Structure
 
 ```text
